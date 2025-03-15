@@ -6,6 +6,13 @@ public abstract class ElectronicDevice
     public string Name{get;set;}
     public bool IsOn{get;set;}
 
+    public ElectronicDevice(int id, string name, bool isOn)
+    {
+        Id = id;
+        Name = name;
+        IsOn = isOn;
+    }
+
     public virtual void TurnOn()
     {
         IsOn = true;

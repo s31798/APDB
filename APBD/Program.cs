@@ -1,7 +1,9 @@
-﻿class Program
+﻿using APBD;
+class Program
 {
     public static void Main(string[] args)
     {
-        Console.WriteLine("Works");
+        var manager = new DeviceManager("input.txt");
+        manager.ShowAllDevices();
     }
 }

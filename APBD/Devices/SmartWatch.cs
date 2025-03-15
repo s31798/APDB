@@ -3,7 +3,8 @@ using APBD.Exceptions;
 
 public class SmartWatch : ElectronicDevice, IPowerNotifier
 {
-    private double _battery
+    private int _battery;
+    public int Battery
     {
         get => _battery;
         set
@@ -20,9 +21,9 @@ public class SmartWatch : ElectronicDevice, IPowerNotifier
         }
     }
 
-    public SmartWatch()
+    public SmartWatch(int id, string name, bool isOn, int battery) : base(id, name, isOn)
     {
-        Name = "SmartWatch";
+        Battery = battery;
     }
 
 
@@ -38,6 +39,12 @@ public class SmartWatch : ElectronicDevice, IPowerNotifier
     }
     public void Notify()
     {
-        Console.WriteLine($"battery is at {Math.Round(_battery, 2)}%");
+        Console.WriteLine($"battery is at {Battery}%");
+    }
+
+    public override string ToString()
+    {
+        string on = IsOn ? "ON" : "OFF";
+        return $"SmartWatch {Id}: {Name} is {on} with {Battery}% battery";
     }
 }

@@ -4,11 +4,12 @@ using Microsoft.VisualBasic;
 
 namespace APBD.Devices;
 
-public class EmbededDevice : ElectronicDevice
+public class EmbeddedDevice : ElectronicDevice
 {
     private const string IpPattern = @"^(?:(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\.){3}(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)$";
     private const string NetworkNamePattern = @"\bMD Ltd\.\b";
-    private string _ip
+    private string _ip;
+    public string Ip
     {
         get=>_ip
         ;
@@ -26,9 +27,10 @@ public class EmbededDevice : ElectronicDevice
     }
     private string _networkName{get;set;}
 
-    public EmbededDevice(int id, string name, bool isOn, string networkName) : base( id, name, isOn)
+    public EmbeddedDevice(int id, string name, bool isOn,string ip, string networkName) : base( id, name, isOn)
     {
         _networkName = networkName;
+        Ip = ip;
     }
 
     public void Connect()
@@ -43,5 +45,11 @@ public class EmbededDevice : ElectronicDevice
     {
         Connect();
         base.TurnOn();
+    }
+    
+    public override string ToString()
+    {
+        string on = IsOn ? "ON" : "OFF";
+        return $"Embedded Device {Id}: {Name} is {on} with ip: {Ip} on the network: {_networkName}";
     }
 }

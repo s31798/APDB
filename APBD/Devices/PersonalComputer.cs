@@ -13,5 +13,9 @@ public class PersonalComputer : ElectronicDevice
         }
         _operatingSystem = operatingSystem;
     }
-    
+    public override string ToString()
+    {
+        string on = IsOn ? "ON" : "OFF";
+        return $"Personal Computer {Id}: {Name} is {on} with {_operatingSystem} operating system";
+    }
 }

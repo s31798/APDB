@@ -3,7 +3,7 @@ using APBD.Exceptions;
 
 public class PersonalComputer : ElectronicDevice
 {
-    private string _operatingSystem;
+    public string OperatingSystem;
 
     public PersonalComputer(int id, string name, bool isOn, string operatingSystem) : base(id, name, isOn)
     {
@@ -11,11 +11,11 @@ public class PersonalComputer : ElectronicDevice
         {
             throw new EmptySystemException();
         }
-        _operatingSystem = operatingSystem;
+        OperatingSystem = operatingSystem;
     }
     public override string ToString()
     {
         string on = IsOn ? "ON" : "OFF";
-        return $"Personal Computer {Id}: {Name} is {on} with {_operatingSystem} operating system";
+        return $"Personal Computer {Id}: {Name} is {on} with {OperatingSystem} operating system";
     }
 }

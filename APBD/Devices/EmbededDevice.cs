@@ -25,17 +25,17 @@ public class EmbeddedDevice : ElectronicDevice
             }
         }
     }
-    private string _networkName{get;set;}
+    public string NetworkName{get;set;}
 
     public EmbeddedDevice(int id, string name, bool isOn,string ip, string networkName) : base( id, name, isOn)
     {
-        _networkName = networkName;
+        NetworkName = networkName;
         Ip = ip;
     }
 
     public void Connect()
     {
-        if (!Regex.IsMatch(_networkName, NetworkNamePattern))
+        if (!Regex.IsMatch(NetworkName, NetworkNamePattern))
         {
             throw new ConnectionException();
         }   
@@ -50,6 +50,6 @@ public class EmbeddedDevice : ElectronicDevice
     public override string ToString()
     {
         string on = IsOn ? "ON" : "OFF";
-        return $"Embedded Device {Id}: {Name} is {on} with ip: {Ip} on the network: {_networkName}";
+        return $"Embedded Device {Id}: {Name} is {on} with ip: {Ip} on the network: {NetworkName}";
     }
 }

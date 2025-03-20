@@ -4,6 +4,6 @@ class Program
     public static void Main(string[] args)
     {
         var manager = new DeviceManager("input.txt");
-        manager.ShowAllDevices();
+        manager.SaveDataToFile("test.txt");
     }
 }

@@ -5,11 +5,12 @@ namespace APBD;
 
 public class DeviceManager
 {
-    private List<ElectronicDevice> _devices = [];
+    public List<ElectronicDevice> Devices { get; set; }
     private int _maxCount = 15;
 
     public DeviceManager(string filePath)
     {
+        Devices = new List<ElectronicDevice>();
         if (!File.Exists(filePath)) throw new FileNotFoundException("File not found ", filePath);
         
         var contents = File.ReadLines(filePath);
@@ -72,41 +73,38 @@ public class DeviceManager
 
     public void ShowAllDevices()
     {
-        foreach (var device in _devices)
+        foreach (var device in Devices)
         {
             Console.WriteLine(device);
         }
     }
 
-    public void RemoveDevice(int id)
+    public void RemoveDevice(int id, string name)
     {
-        foreach (ElectronicDevice device in _devices)
-        {
-            if (device.Id == id) _devices.Remove(device);
-        }
+        Devices.RemoveAll(device => device.Id == id && device.Name == name);
     }
     public void AddDevice(ElectronicDevice device)
     {
-        if (_devices.Count < _maxCount)
+        if (Devices.Count < _maxCount)
         {
-             _devices.Add(device);
+             Devices.Add(device);
         }
        
     }
 
-    public void TurnOnDevice(int id)
+    public void TurnOnDevice(int id, string name)
     { 
-        foreach (ElectronicDevice device in _devices)
+        foreach (ElectronicDevice device in Devices)
         {
-            if (device.Id == id) device.TurnOn();
+            if (device.Id == id && device.Name == name) device.TurnOn();
         }
     }
 
-    public void TurnOffDevice(int id)
+    public void TurnOffDevice(int id, string name)
     {
-        foreach (ElectronicDevice device in _devices)
+        foreach (ElectronicDevice device in Devices)
         {
-            if (device.Id == id) device.TurnOff();
+            if (device.Id == id && device.Name == name) device.TurnOff();
         }
     }
 
@@ -115,7 +113,7 @@ public class DeviceManager
         try
         {
             using StreamWriter writer = new StreamWriter(fileName);
-            foreach (ElectronicDevice device in _devices)
+            foreach (ElectronicDevice device in Devices)
             {
                 string type;
                 string id = "-" + device.Id;

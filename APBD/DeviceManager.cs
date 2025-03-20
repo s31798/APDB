@@ -149,6 +149,37 @@ public class DeviceManager
             Console.WriteLine(e);
             throw;
         }
-       
+        
+    }
+
+    public void EditDeviceData(int id, string name, string? newName, string? newIp, string? newNetworkName, string? newOperatingSystem)
+    {
+        ElectronicDevice? deviceToEdit = null;
+    
+        foreach (var device in Devices)
+        {
+            if (device.Id == id && device.Name == name)
+            {
+                deviceToEdit = device;
+                break;
+            }
+        }
+        if (deviceToEdit == null) return;
+        if (newName != null)
+        {
+            deviceToEdit.Name = newName;
+        }
+        if (deviceToEdit is EmbeddedDevice edn && newNetworkName != null)
+        {
+            edn.NetworkName = newNetworkName;
+        }
+        if (deviceToEdit is EmbeddedDevice edip && newIp != null)
+        {
+            edip.Ip = newIp;
+        }
+        if (deviceToEdit is PersonalComputer pc && newOperatingSystem != null)
+        {
+            pc.OperatingSystem = newOperatingSystem;
+        }
     }
 }

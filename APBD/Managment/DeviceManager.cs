@@ -3,11 +3,22 @@
 
 namespace APBD;
 
+/// <summary>
+/// Manages a collection of electronic devices with operations for device control and data persistence.
+/// </summary>
 public class DeviceManager : IDeviceManager
 {
+    /// <summary>
+    /// Gets or sets the list of electronic devices managed by this instance.
+    /// </summary>
     public List<ElectronicDevice> Devices { get; set; }
     private int _maxCount = 15;
 
+    /// <summary>
+    /// Initializes a new instance of the DeviceManager class.
+    /// </summary>
+    /// <param name="filePath">The path to the file containing device data.</param>
+    /// <exception cref="FileNotFoundException">Thrown when the specified file does not exist.</exception>
     public DeviceManager(string filePath)
     {
         Devices = new List<ElectronicDevice>();
@@ -22,6 +33,9 @@ public class DeviceManager : IDeviceManager
         }
     }
 
+    /// <summary>
+    /// Displays information about all devices in the collection to the console.
+    /// </summary>
     public void ShowAllDevices()
     {
         foreach (var device in Devices)
@@ -30,10 +44,20 @@ public class DeviceManager : IDeviceManager
         }
     }
 
+    /// <summary>
+    /// Removes a device from the collection based on its ID and name.
+    /// </summary>
+    /// <param name="id">The unique identifier of the device to remove.</param>
+    /// <param name="name">The name of the device to remove.</param>
     public void RemoveDevice(string id, string name)
     {
         Devices.RemoveAll(device => device.Id == id && device.Name == name);
     }
+
+    /// <summary>
+    /// Adds a new device to the collection if the maximum device count has not been reached.
+    /// </summary>
+    /// <param name="device">The electronic device to add to the collection.</param>
     public void AddDevice(ElectronicDevice device)
     {
         if (Devices.Count < _maxCount)
@@ -43,6 +67,11 @@ public class DeviceManager : IDeviceManager
        
     }
 
+    /// <summary>
+    /// Turns on a specific device identified by its ID and name.
+    /// </summary>
+    /// <param name="id">The unique identifier of the device to turn on.</param>
+    /// <param name="name">The name of the device to turn on.</param>
     public void TurnOnDevice(string id, string name)
     { 
         foreach (ElectronicDevice device in Devices)
@@ -51,6 +80,11 @@ public class DeviceManager : IDeviceManager
         }
     }
 
+    /// <summary>
+    /// Turns off a specific device identified by its ID and name.
+    /// </summary>
+    /// <param name="id">The unique identifier of the device to turn off.</param>
+    /// <param name="name">The name of the device to turn off.</param>
     public void TurnOffDevice(string id, string name)
     {
         foreach (ElectronicDevice device in Devices)
@@ -59,6 +93,11 @@ public class DeviceManager : IDeviceManager
         }
     }
 
+    /// <summary>
+    /// Saves the current state of all devices to a specified file.
+    /// </summary>
+    /// <param name="fileName">The name of the file to save the device data to.</param>
+    /// <exception cref="IOException">Thrown when an I/O error occurs while writing to the file.</exception>
     public void SaveDataToFile(string fileName)
     {
         try
@@ -103,6 +142,15 @@ public class DeviceManager : IDeviceManager
         
     }
 
+    /// <summary>
+    /// Updates the properties of a specific device identified by its ID and name.
+    /// </summary>
+    /// <param name="id">The unique identifier of the device to edit.</param>
+    /// <param name="name">The name of the device to edit.</param>
+    /// <param name="newName">The new name for the device (optional).</param>
+    /// <param name="newIp">The new IP address for embedded devices (optional).</param>
+    /// <param name="newNetworkName">The new network name for embedded devices (optional).</param>
+    /// <param name="newOperatingSystem">The new operating system for personal computers (optional).</param>
     public void EditDeviceData(string id, string name, string? newName, string? newIp, string? newNetworkName, string? newOperatingSystem)
     {
         ElectronicDevice? deviceToEdit = null;

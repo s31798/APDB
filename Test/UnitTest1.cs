@@ -23,23 +23,23 @@ public class DeviceManagerTests
     {
         var manager = new DeviceManager("input.txt");
         int initialCount = manager.Devices.Count;
-        var newDevice = new SmartWatch(2, "Apple Watch", false, 90);
+        var newDevice = new SmartWatch("2", "Apple Watch", false, 90);
         
         manager.AddDevice(newDevice);
         Assert.Equal(initialCount + 1, manager.Devices.Count);
-        Assert.Contains(manager.Devices, d => d.Id == 2 && d.Name == "Apple Watch");
+        Assert.Contains(manager.Devices, d => d.Id == "2" && d.Name == "Apple Watch");
     }
     [Fact]
     public void RemoveDevice_RemovesDeviceFromCollection()
     {
         var manager = new DeviceManager(_testFile);
-        Assert.Contains(manager.Devices, d => d.Id == 1 && d.Name == "Apple Watch SE2");
+        Assert.Contains(manager.Devices, d => d.Id == "1" && d.Name == "Apple Watch SE2");
         
         int initialCount = manager.Devices.Count;
-        manager.RemoveDevice(1,"Apple Watch SE2");
+        manager.RemoveDevice("1","Apple Watch SE2");
         
         Assert.Equal(initialCount - 1, manager.Devices.Count);
-        Assert.DoesNotContain(manager.Devices, d =>  d.Id == 1 && d.Name == "Apple Watch SE2");
+        Assert.DoesNotContain(manager.Devices, d =>  d.Id == "1" && d.Name == "Apple Watch SE2");
         
     }
     [Fact]
@@ -51,7 +51,7 @@ public class DeviceManagerTests
         Assert.NotNull(device);
         Assert.False(device.IsOn);
         
-        manager.TurnOnDevice(1,"LinuxPC");
+        manager.TurnOnDevice("1","LinuxPC");
         
         Assert.True(device.IsOn);
     }
@@ -60,11 +60,11 @@ public class DeviceManagerTests
     {
         var manager = new DeviceManager(_testFile);
         
-        var device = manager.Devices.FirstOrDefault(d => d.Id == 1 && d.Name == "Apple Watch SE2");
+        var device = manager.Devices.FirstOrDefault(d => d.Id == "1" && d.Name == "Apple Watch SE2");
         Assert.NotNull(device);
         Assert.True(device.IsOn);
         
-        manager.TurnOnDevice(1,"LinuxPC");
+        manager.TurnOffDevice("1","Apple Watch SE2");
         
         Assert.False(device.IsOn);
     }

@@ -21,7 +21,7 @@ public class SmartWatch : ElectronicDevice, IPowerNotifier
         }
     }
 
-    public SmartWatch(int id, string name, bool isOn, int battery) : base(id, name, isOn)
+    public SmartWatch(string id, string name, bool isOn, int battery) : base(id, name, isOn)
     {
         Battery = battery;
     }

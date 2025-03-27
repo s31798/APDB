@@ -5,7 +5,7 @@ public class PersonalComputer : ElectronicDevice
 {
     public string OperatingSystem;
 
-    public PersonalComputer(int id, string name, bool isOn, string operatingSystem) : base(id, name, isOn)
+    public PersonalComputer(string id, string name, bool isOn, string operatingSystem) : base(id, name, isOn)
     {
         if (string.IsNullOrEmpty(operatingSystem))
         {

@@ -1,9 +1,9 @@
 ﻿using APBD.Devices;
-using APBD.Exceptions;
+
 
 namespace APBD;
 
-public class DeviceManager
+public class DeviceManager : IDeviceManager
 {
     public List<ElectronicDevice> Devices { get; set; }
     private int _maxCount = 15;
@@ -14,60 +14,11 @@ public class DeviceManager
         if (!File.Exists(filePath)) throw new FileNotFoundException("File not found ", filePath);
         
         var contents = File.ReadLines(filePath);
+        var factory = new DeviceTextFactory();
         foreach (var line in contents)
         {
-            try
-            {
-                var info = line.Trim().Split(",");
-                var first = info[0].Split("-");
-                var id = int.Parse(first[1]);
-                var type = first[0];
-                var name = info[1];
-
-                switch (type)
-                {
-                    case "SW":
-                        var battery = int.Parse(info[3].Replace("%", ""));
-                        AddDevice(new SmartWatch(id, name, bool.Parse(info[2]), battery));
-                        break;
-                    case "P":
-                        var operatingSystem = info[3];
-                        AddDevice(new PersonalComputer(id, name, bool.Parse(info[2]), operatingSystem));
-                        break;
-                    case "ED":
-                        var ip = info[2];
-                        var networkName = info[3];
-                        AddDevice(new EmbeddedDevice(id, name, false, ip, networkName));
-                        break;
-                }
-            }
-            catch (IndexOutOfRangeException e)
-            {
-                continue;
-            }
-            catch (FormatException e)
-            {
-                continue;
-            }
-            catch (ConnectionException e)
-            {
-            }
-            catch (EmptySystemException e)
-            {
-                continue;
-            }
-            catch (ArgumentOutOfRangeException e)
-            {
-                continue;
-            }
-            catch (EmptyBatteryException)
-            {
-                continue;
-            }
-            catch (ArgumentException e)
-            {
-                continue;
-            }
+            var device = factory.CreateElectronicDevice(line);
+            if(device != null) Devices.Add(device);
         }
     }
 
@@ -79,7 +30,7 @@ public class DeviceManager
         }
     }
 
-    public void RemoveDevice(int id, string name)
+    public void RemoveDevice(string id, string name)
     {
         Devices.RemoveAll(device => device.Id == id && device.Name == name);
     }
@@ -92,7 +43,7 @@ public class DeviceManager
        
     }
 
-    public void TurnOnDevice(int id, string name)
+    public void TurnOnDevice(string id, string name)
     { 
         foreach (ElectronicDevice device in Devices)
         {
@@ -100,7 +51,7 @@ public class DeviceManager
         }
     }
 
-    public void TurnOffDevice(int id, string name)
+    public void TurnOffDevice(string id, string name)
     {
         foreach (ElectronicDevice device in Devices)
         {
@@ -152,7 +103,7 @@ public class DeviceManager
         
     }
 
-    public void EditDeviceData(int id, string name, string? newName, string? newIp, string? newNetworkName, string? newOperatingSystem)
+    public void EditDeviceData(string id, string name, string? newName, string? newIp, string? newNetworkName, string? newOperatingSystem)
     {
         ElectronicDevice? deviceToEdit = null;
     

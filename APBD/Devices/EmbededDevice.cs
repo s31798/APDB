@@ -27,7 +27,7 @@ public class EmbeddedDevice : ElectronicDevice
     }
     public string NetworkName{get;set;}
 
-    public EmbeddedDevice(int id, string name, bool isOn,string ip, string networkName) : base( id, name, isOn)
+    public EmbeddedDevice(string id, string name, bool isOn,string ip, string networkName) : base( id, name, isOn)
     {
         NetworkName = networkName;
         Ip = ip;

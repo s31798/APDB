@@ -2,11 +2,11 @@
 
 public abstract class ElectronicDevice
 {
-    public int Id{get;set;}
+    public string Id{get;set;}
     public string Name{get;set;}
     public bool IsOn{get;set;}
 
-    public ElectronicDevice(int id, string name, bool isOn)
+    public ElectronicDevice(string id, string name, bool isOn)
     {
         Id = id;
         Name = name;

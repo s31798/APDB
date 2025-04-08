@@ -34,27 +34,39 @@ public class DeviceManager : IDeviceManager
         return Devices;
     }
 
+    public ElectronicDevice? GetDeviceById(string id)
+    {
+        return Devices.Find(x => x.Id == id);
+    }
+
     /// <summary>
     /// Removes a device from the collection based on its ID and name.
     /// </summary>
     /// <param name="id">The unique identifier of the device to remove.</param>
     /// <param name="name">The name of the device to remove.</param>
-    public void RemoveDevice(string id, string name)
+    public ElectronicDevice? RemoveDevice(string id)
     {
-        Devices.RemoveAll(device => device.Id == id && device.Name == name);
+        var deviceToRemove = Devices.FirstOrDefault(d => d.Id == id);
+        if (deviceToRemove != null)
+        {
+            Devices.Remove(deviceToRemove);
+            return deviceToRemove;
+        }
+        return null;
     }
 
     /// <summary>
     /// Adds a new device to the collection if the maximum device count has not been reached.
     /// </summary>
     /// <param name="device">The electronic device to add to the collection.</param>
-    public void AddDevice(ElectronicDevice device)
+    public ElectronicDevice? AddDevice(ElectronicDevice device)
     {
         if (Devices.Count < _maxCount)
         {
              Devices.Add(device);
+             return device;
         }
-       
+        return null;
     }
 
     /// <summary>
@@ -141,19 +153,19 @@ public class DeviceManager : IDeviceManager
     /// <param name="newIp">The new IP address for embedded devices (optional).</param>
     /// <param name="newNetworkName">The new network name for embedded devices (optional).</param>
     /// <param name="newOperatingSystem">The new operating system for personal computers (optional).</param>
-    public void EditDeviceData(string id, string name, string? newName, string? newIp, string? newNetworkName, string? newOperatingSystem)
+    public ElectronicDevice? EditDeviceData(string id, string? newName, string? newIp, string? newNetworkName, string? newOperatingSystem)
     {
         ElectronicDevice? deviceToEdit = null;
     
         foreach (var device in Devices)
         {
-            if (device.Id == id && device.Name == name)
+            if (device.Id == id)
             {
                 deviceToEdit = device;
                 break;
             }
         }
-        if (deviceToEdit == null) return;
+        if (deviceToEdit == null) return null;
         if (newName != null)
         {
             deviceToEdit.Name = newName;
@@ -170,5 +182,6 @@ public class DeviceManager : IDeviceManager
         {
             pc.OperatingSystem = newOperatingSystem;
         }
+        return deviceToEdit;
     }
 }

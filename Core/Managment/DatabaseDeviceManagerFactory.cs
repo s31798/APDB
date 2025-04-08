@@ -1,5 +1,4 @@
-﻿using APBD.Database;
-
+﻿
 namespace APBD;
 
 public class DatabaseDeviceManagerFactory : IManagerFactory

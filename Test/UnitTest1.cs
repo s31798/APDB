@@ -34,7 +34,7 @@ public class DeviceManagerTests
         Assert.Contains(manager.GetAllDevices(), d => d.Id == "1" && d.Name == "Apple Watch SE2");
         
         int initialCount = manager.GetAllDevices().Count;
-        manager.RemoveDevice("1","Apple Watch SE2");
+        manager.RemoveDevice("1");
         
         Assert.Equal(initialCount - 1, manager.GetAllDevices().Count);
         Assert.DoesNotContain(manager.GetAllDevices(), d =>  d.Id == "1" && d.Name == "Apple Watch SE2");

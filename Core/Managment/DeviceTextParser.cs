@@ -3,7 +3,7 @@ using APBD.Exceptions;
 
 namespace APBD;
 
-public class DeviceTextFactory
+public class DeviceTextParser
 {
     public ElectronicDevice? CreateElectronicDevice(string text)
     {

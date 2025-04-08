@@ -19,29 +19,19 @@ public class DeviceManager : IDeviceManager
     /// </summary>
     /// <param name="filePath">The path to the file containing device data.</param>
     /// <exception cref="FileNotFoundException">Thrown when the specified file does not exist.</exception>
-    public DeviceManager(string filePath)
+    public DeviceManager(List<ElectronicDevice> devices)
     {
-        Devices = new List<ElectronicDevice>();
-        if (!File.Exists(filePath)) throw new FileNotFoundException("File not found ", filePath);
-        
-        var contents = File.ReadLines(filePath);
-        var factory = new DeviceTextFactory();
-        foreach (var line in contents)
-        {
-            var device = factory.CreateElectronicDevice(line);
-            if(device != null) Devices.Add(device);
-        }
+        Devices = devices;
+       
+      
     }
 
     /// <summary>
     /// Displays information about all devices in the collection to the console.
     /// </summary>
-    public void ShowAllDevices()
+    public List<ElectronicDevice> GetAllDevices()
     {
-        foreach (var device in Devices)
-        {
-            Console.WriteLine(device);
-        }
+        return Devices;
     }
 
     /// <summary>

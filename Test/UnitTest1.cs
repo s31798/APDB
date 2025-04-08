@@ -10,44 +10,43 @@ public class DeviceManagerTests
     [Fact]
     public void Constructor_LoadsDevicesFromFile()
     {
-        var manager = new DeviceManager(_testFile);
-        Assert.Equal(4, manager.Devices.Count);
-    }
-    [Fact]
-    public void Constructor_ThrowsExceptionForMissingFile()
-    {
-        Assert.Throws<FileNotFoundException>(() => new DeviceManager("missing.txt"));
+        var factory = new FileDeviceMangerFactory();
+        IDeviceManager manager = factory.CreateDeviceManager();
+        Assert.Equal(4, manager.GetAllDevices().Count);
     }
     [Fact]
     public void AddDevice_AddsDevice()
     {
-        var manager = new DeviceManager("input.txt");
-        int initialCount = manager.Devices.Count;
+        var factory = new FileDeviceMangerFactory();
+        IDeviceManager manager = factory.CreateDeviceManager();
+        int initialCount = manager.GetAllDevices().Count;
         var newDevice = new SmartWatch("2", "Apple Watch", false, 90);
         
         manager.AddDevice(newDevice);
-        Assert.Equal(initialCount + 1, manager.Devices.Count);
-        Assert.Contains(manager.Devices, d => d.Id == "2" && d.Name == "Apple Watch");
+        Assert.Equal(initialCount + 1, manager.GetAllDevices().Count);
+        Assert.Contains(manager.GetAllDevices(), d => d.Id == "2" && d.Name == "Apple Watch");
     }
     [Fact]
     public void RemoveDevice_RemovesDeviceFromCollection()
     {
-        var manager = new DeviceManager(_testFile);
-        Assert.Contains(manager.Devices, d => d.Id == "1" && d.Name == "Apple Watch SE2");
+        var factory = new FileDeviceMangerFactory();
+        IDeviceManager manager = factory.CreateDeviceManager();
+        Assert.Contains(manager.GetAllDevices(), d => d.Id == "1" && d.Name == "Apple Watch SE2");
         
-        int initialCount = manager.Devices.Count;
+        int initialCount = manager.GetAllDevices().Count;
         manager.RemoveDevice("1","Apple Watch SE2");
         
-        Assert.Equal(initialCount - 1, manager.Devices.Count);
-        Assert.DoesNotContain(manager.Devices, d =>  d.Id == "1" && d.Name == "Apple Watch SE2");
+        Assert.Equal(initialCount - 1, manager.GetAllDevices().Count);
+        Assert.DoesNotContain(manager.GetAllDevices(), d =>  d.Id == "1" && d.Name == "Apple Watch SE2");
         
     }
     [Fact]
     public void TurnOnDevice_SetsDeviceIsOnToTrue()
     {
-        var manager = new DeviceManager(_testFile);
+        var factory = new FileDeviceMangerFactory();
+        IDeviceManager manager = factory.CreateDeviceManager();
         
-        var device = manager.Devices.FirstOrDefault(d => d.Name == "LinuxPC");
+        var device = manager.GetAllDevices().FirstOrDefault(d => d.Name == "LinuxPC");
         Assert.NotNull(device);
         Assert.False(device.IsOn);
         
@@ -58,9 +57,10 @@ public class DeviceManagerTests
     [Fact]
     public void TurnOffDevice_SetsDeviceIsOnToFalse()
     {
-        var manager = new DeviceManager(_testFile);
+        var factory = new FileDeviceMangerFactory();
+        IDeviceManager manager = factory.CreateDeviceManager();
         
-        var device = manager.Devices.FirstOrDefault(d => d.Id == "1" && d.Name == "Apple Watch SE2");
+        var device = manager.GetAllDevices().FirstOrDefault(d => d.Id == "1" && d.Name == "Apple Watch SE2");
         Assert.NotNull(device);
         Assert.True(device.IsOn);
         

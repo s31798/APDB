@@ -16,80 +16,80 @@ public class DevicesController : ControllerBase
         _deviceManager = deviceManager;
     }
     [HttpGet]
-    public  ActionResult<IEnumerable<ElectronicDevice>> Get()
+    public IResult Get()
     {
-        return Ok(_deviceManager.GetAllDevices());
+        return Results.Ok(_deviceManager.GetAllDevices());
     }
     [HttpGet("{id}")]
-    public ActionResult<ElectronicDevice> Get(string id)
+    public IResult Get(string id)
     {
         var device = _deviceManager.GetDeviceById(id);
 
         if (device == null)
         {
-            return NotFound();
+            return Results.NotFound();
         }
 
-        return Ok(device);
+        return Results.Ok(device);
     }
 
     
-    private ActionResult<ElectronicDevice> AddDevice(ElectronicDevice device)
+    private IResult AddDevice(ElectronicDevice device)
     {
         if (device == null)
         {
-            return BadRequest("Device data cannot be null.");
+            return Results.BadRequest("Device data cannot be null.");
         }
         var createdDevice = _deviceManager.AddDevice(device);
 
         if (createdDevice == null)
         {
-            return StatusCode(403, new { error = "Forbidden", message = "Max number of devices exceeded." });
+            return Results.StatusCode(403);
         }
-        return CreatedAtAction(nameof(Get), new { id = createdDevice.Id }, createdDevice);
+        return Results.Created($"/devices/{createdDevice.Id}", createdDevice);
     }
     
     [HttpPost("PersonalComputer")]
-    public ActionResult<ElectronicDevice> Post([FromBody] PersonalComputer newComputer)
+    public IResult Post([FromBody] PersonalComputer newComputer)
     {
         return AddDevice(newComputer);
     }
     [HttpPost("EmbededDevice")]
-    public ActionResult<ElectronicDevice> Post([FromBody] EmbeddedDevice newEmbededDevice)
+    public IResult Post([FromBody] EmbeddedDevice newEmbededDevice)
     {
         return AddDevice(newEmbededDevice);
     }
     [HttpPost("SmartWatch")]
-    public ActionResult<ElectronicDevice> Post([FromBody] SmartWatch newSmartWatch)
+    public IResult Post([FromBody] SmartWatch newSmartWatch)
     {
        return AddDevice(newSmartWatch);
     }
 
     [HttpPut("{id}")]
-    public ActionResult<ElectronicDevice> Put(string id, [FromBody] EditDeviceRequest updatedDevice)
+    public IResult Put(string id, [FromBody] EditDeviceRequest updatedDevice)
     {
         if (updatedDevice == null)
         {
-            return BadRequest();
+            return Results.BadRequest();
         }
 
         var result = _deviceManager.EditDeviceData(id, updatedDevice.NewName, updatedDevice.NewIp, updatedDevice.NewNetworkName, updatedDevice.NewOperatingSystem);
         if (result == null)
         {
-            return NotFound();
+            return Results.NotFound();
         }
-        return Ok(result);
+        return Results.Ok(result);
     }
 
     [HttpDelete("{id}")]
-    public ActionResult<ElectronicDevice> Delete(string id)
+    public IResult Delete(string id)
     {
        var result =  _deviceManager.RemoveDevice(id);
        if (result == null)
        {
-           return NotFound();
+           return Results.NotFound();
        }
-       return Ok(result);
+       return Results.Ok(result);
     }
 
     public class EditDeviceRequest

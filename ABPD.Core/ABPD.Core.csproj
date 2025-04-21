@@ -14,4 +14,8 @@
       </None>
     </ItemGroup>
 
+    <ItemGroup>
+      <ProjectReference Include="..\ABPD.Modells\ABPD.Modells.csproj" />
+    </ItemGroup>
+
 </Project>

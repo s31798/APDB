@@ -7,10 +7,7 @@ public class Program
     public static void Main(string[] args)
     {
         var builder = WebApplication.CreateBuilder(args);
-
-       
-        var factory = new DatabaseDeviceManagerFactory();
-        IDeviceManager manager = factory.CreateDeviceManager();
+        IDeviceManager manager = new DeviceManager([]);
         builder.Services.AddControllers();
         builder.Services.AddSingleton<IDeviceManager>(manager);
 

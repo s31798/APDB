@@ -52,6 +52,8 @@ public class EmbeddedDevice : ElectronicDevice
         NetworkName = networkName;
         Ip = ip;
     }
+    
+
 
     /// <summary>
     /// Attempts to connect the device to its network.

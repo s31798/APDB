@@ -15,6 +15,6 @@ public class FileDeviceMangerFactory : IManagerFactory
             var device = parser.CreateElectronicDevice(line);
             if(device != null) devices.Add(device);
         }
-        return new DeviceManager(devices);
+        return new DeviceManager(devices, "");
     }
 }

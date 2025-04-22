@@ -9,7 +9,7 @@ using Microsoft.AspNetCore.Mvc;
 namespace WebApplication2.Controllers;
 
 [ApiController]
-[Route("devices")]
+[Route("/api/devices")]
 public class DevicesController : ControllerBase
 {
     private readonly IDeviceService _deviceService;

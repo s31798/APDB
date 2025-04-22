@@ -23,7 +23,7 @@
     </ItemGroup>
 
     <ItemGroup>
-      <ProjectReference Include="..\ABPD.Core\ABPD.Core.csproj" />
+      <ProjectReference Include="..\ABPD.Console\ABPD.Console.csproj" />
     </ItemGroup>
 
 </Project>

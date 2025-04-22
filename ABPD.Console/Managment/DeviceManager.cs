@@ -14,18 +14,17 @@ public class DeviceManager : IDeviceManager
     /// </summary>
     public List<ElectronicDevice> Devices { get; set; }
     private int _maxCount = 15;
-    private string _connectionString;
+
 
     /// <summary>
     /// Initializes a new instance of the DeviceManager class.
     /// </summary>
     /// <param name="filePath">The path to the file containing device data.</param>
     /// <exception cref="FileNotFoundException">Thrown when the specified file does not exist.</exception>
-    public DeviceManager(List<ElectronicDevice> devices, string connectionString)
+    public DeviceManager(List<ElectronicDevice> devices)
     {
         Devices = devices;
-       _connectionString = connectionString;
-      
+
     }
 
     /// <summary>
@@ -33,36 +32,7 @@ public class DeviceManager : IDeviceManager
     /// </summary>
     public List<ElectronicDevice> GetAllDevices()
     {
-        List<ElectronicDevice> devices = [];
-        const string queryString = "SELECT e.Id, e.Name, e.IsOn, ed.Ip, ed.NetworkName FROM ElectronicDevice e JOIN EmbeddedDevice ed ON e.Id = ed.Id;";
-        using (SqlConnection connection = new SqlConnection(_connectionString))
-        {
-            SqlCommand command = new SqlCommand(queryString, connection);
-            connection.Open();
-            SqlDataReader reader = command.ExecuteReader();
-            try
-            {
-                if (reader.HasRows)
-                {
-                    while (reader.Read())
-                    {
-                        var deviceRow = new EmbeddedDevice(id: reader.GetString(0), 
-                            name: reader.GetString(1),
-                            isOn: reader.GetBoolean(2),
-                            ip: reader.GetString(3), 
-                            networkName: reader.GetString(4)
-                        );
-                        
-                        devices.Add(deviceRow);
-                    }
-                }
-            }
-            finally
-            {
-                reader.Close();
-            }
-        }
-        return devices;  
+       return Devices;
     }
 
     public ElectronicDevice? GetDeviceById(string id)

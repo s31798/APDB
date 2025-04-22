@@ -1,3 +1,4 @@
+using ABPD.Application;
 using APBD;
 using APBD.Devices;
 
@@ -12,7 +13,7 @@ public class Program
         var connectionString = builder.Configuration.GetConnectionString("local");
         if (connectionString != null)
         {
-            builder.Services.AddSingleton<IDeviceManager,DeviceManager>(manager => new DeviceManager(new List<ElectronicDevice>(),connectionString));
+            builder.Services.AddSingleton<IDeviceService,DeviceService>(manager => new DeviceService(connectionString));
         }
         else
         {

@@ -40,7 +40,7 @@ public class SmartWatch : ElectronicDevice, IPowerNotifier
     {
         Battery = battery;
     }
-
+    public SmartWatch(){}
     /// <summary>
     /// Powers on the smart watch if battery is not empty.
     /// </summary>

@@ -52,7 +52,11 @@ public class EmbeddedDevice : ElectronicDevice
         NetworkName = networkName;
         Ip = ip;
     }
-    
+
+    public EmbeddedDevice()
+    {
+        
+    }
 
 
     /// <summary>

@@ -1,4 +1,7 @@
+using System.Text.Json;
+using System.Text.Json.Nodes;
 using System.Text.Json.Serialization;
+using ABPD.Application;
 using APBD;
 using APBD.Devices;
 using Microsoft.AspNetCore.Mvc;
@@ -9,21 +12,23 @@ namespace WebApplication2.Controllers;
 [Route("devices")]
 public class DevicesController : ControllerBase
 {
-    private readonly IDeviceManager _deviceManager;
+    private readonly IDeviceService _deviceService;
 
-    public DevicesController(IDeviceManager deviceManager)
+    public DevicesController(IDeviceService deviceService)
     {
-        _deviceManager = deviceManager;
+        _deviceService = deviceService;
     }
     [HttpGet]
     public IResult Get()
     {
-        return Results.Ok(_deviceManager.GetAllDevices());
+        List<ElectronicDevice> result = _deviceService.Devices();
+        Console.WriteLine(result[0]);
+        return Results.Ok(result);
     }
     [HttpGet("{id}")]
     public IResult Get(string id)
     {
-        var device = _deviceManager.GetDeviceById(id);
+        var device = _deviceService.GetDeviceById(id);
 
         if (device == null)
         {
@@ -40,29 +45,30 @@ public class DevicesController : ControllerBase
         {
             return Results.BadRequest("Device data cannot be null.");
         }
-        var createdDevice = _deviceManager.AddDevice(device);
+        var createdDevice = _deviceService.AddDevice(device);
 
-        if (createdDevice == null)
+        if (!createdDevice)
         {
             return Results.StatusCode(403);
         }
-        return Results.Created($"/devices/{createdDevice.Id}", createdDevice);
+        return Results.StatusCode(201);
     }
     
-    [HttpPost("PersonalComputer")]
-    public IResult Post([FromBody] PersonalComputer newComputer)
+    [HttpPost()]
+    public async Task<IResult> Post()
     {
-        return AddDevice(newComputer);
-    }
-    [HttpPost("EmbededDevice")]
-    public IResult Post([FromBody] EmbeddedDevice newEmbededDevice)
-    {
-        return AddDevice(newEmbededDevice);
-    }
-    [HttpPost("SmartWatch")]
-    public IResult Post([FromBody] SmartWatch newSmartWatch)
-    {
-       return AddDevice(newSmartWatch);
+       
+        var request = HttpContext.Request;
+        using var reader = new StreamReader(request.Body);
+        var rawJson = await reader.ReadToEndAsync();
+        var device = DeviceFromJson(rawJson);
+        Console.WriteLine(device);
+        if (device != null)
+        {
+            AddDevice(device);
+            return Results.StatusCode(201);
+        }
+        return Results.BadRequest();
     }
 
     [HttpPut("{id}")]
@@ -73,7 +79,7 @@ public class DevicesController : ControllerBase
             return Results.BadRequest();
         }
 
-        var result = _deviceManager.EditDeviceData(id, updatedDevice.NewName, updatedDevice.NewIp, updatedDevice.NewNetworkName, updatedDevice.NewOperatingSystem);
+        var result = _deviceService.EditDeviceData(id, updatedDevice.NewName, updatedDevice.NewIp, updatedDevice.NewNetworkName, updatedDevice.NewOperatingSystem);
         if (result == null)
         {
             return Results.NotFound();
@@ -84,8 +90,8 @@ public class DevicesController : ControllerBase
     [HttpDelete("{id}")]
     public IResult Delete(string id)
     {
-       var result =  _deviceManager.RemoveDevice(id);
-       if (result == null)
+       var result =  _deviceService.DeleteDevice(id);
+       if (result == false)
        {
            return Results.NotFound();
        }
@@ -106,4 +112,40 @@ public class DevicesController : ControllerBase
         [JsonPropertyName("newOperatingSystem")]
         public string? NewOperatingSystem { get; set; }
     }
+
+   private ElectronicDevice? DeviceFromJson(string rawJson)
+{
+    Console.WriteLine(rawJson);
+    var json = JsonNode.Parse(rawJson);
+
+    if (json == null)
+        return null;
+    
+    if (json is not JsonObject jsonObj)
+        return null;
+    var id = jsonObj["id"]?.ToString();
+    var name = jsonObj["name"]?.ToString();
+    var isOn = jsonObj["isOn"]?.GetValue<bool>() ?? false;
+    if (jsonObj.TryGetPropertyValue("battery", out var batteryNode))
+    {
+        var battery = batteryNode.GetValue<int>();
+        return new SmartWatch(id, name, isOn, battery);
+    }
+    if (jsonObj.TryGetPropertyValue("operatingSystem", out var osNode))
+    {
+        var operatingSystem = osNode.ToString();
+        return new PersonalComputer(id, name, isOn, operatingSystem);
+    }
+    
+    if (jsonObj.TryGetPropertyValue("ip", out var ipNode) && jsonObj.TryGetPropertyValue("networkName", out var networkNode))
+    {
+        var ip = ipNode?.ToString();
+        var networkName = networkNode.ToString();
+        return new EmbeddedDevice(id, name, isOn, ip, networkName);
+    }
+    
+    return null;
+}
+
+
 }

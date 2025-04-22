@@ -27,6 +27,7 @@ public class PersonalComputer : ElectronicDevice
         }
         OperatingSystem = operatingSystem;
     }
+    public PersonalComputer(){}
 
     /// <summary>
     /// Returns a string representation of the personal computer.

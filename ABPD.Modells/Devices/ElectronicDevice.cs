@@ -32,7 +32,7 @@ public abstract class ElectronicDevice
         Name = name;
         IsOn = isOn;
     }
-
+    public ElectronicDevice(){}
     /// <summary>
     /// Powers on the device.
     /// </summary>

@@ -2,6 +2,7 @@ using System.Text.Json;
 using System.Text.Json.Nodes;
 using System.Text.Json.Serialization;
 using ABPD.Application;
+using ABPD.Modells.DTOs;
 using APBD;
 using APBD.Devices;
 using Microsoft.AspNetCore.Mvc;
@@ -19,16 +20,16 @@ public class DevicesController : ControllerBase
         _deviceService = deviceService;
     }
     [HttpGet]
-    public IResult Get()
+    public async Task<IResult> Get()
     {
-        List<ElectronicDevice> result = _deviceService.Devices();
+        var result = await _deviceService.DevicesAsync();
         Console.WriteLine(result[0]);
         return Results.Ok(result);
     }
     [HttpGet("{id}")]
-    public IResult Get(string id)
+    public async Task<IResult> Get(string id)
     {
-        var device = _deviceService.GetDeviceById(id);
+        var device = await _deviceService.GetDeviceByIdAsync(id);
 
         if (device == null)
         {
@@ -39,13 +40,13 @@ public class DevicesController : ControllerBase
     }
 
     
-    private IResult AddDevice(ElectronicDevice device)
+    private async Task<IResult> AddDevice(ElectronicDevice device)
     {
         if (device == null)
         {
             return Results.BadRequest("Device data cannot be null.");
         }
-        var createdDevice = _deviceService.AddDevice(device);
+        var createdDevice = await _deviceService.AddDeviceAsync(device);
 
         if (!createdDevice)
         {
@@ -72,14 +73,14 @@ public class DevicesController : ControllerBase
     }
 
     [HttpPut("{id}")]
-    public IResult Put(string id, [FromBody] EditDeviceRequest updatedDevice)
+    public async Task<IResult> Put(string id, [FromBody] EditDeviceRequest updatedDevice)
     {
         if (updatedDevice == null)
         {
             return Results.BadRequest();
         }
 
-        var result = _deviceService.EditDeviceData(id, updatedDevice.NewName, updatedDevice.NewIp, updatedDevice.NewNetworkName, updatedDevice.NewOperatingSystem);
+        var result =  await _deviceService.EditDeviceDataAsync(id, updatedDevice.NewName, updatedDevice.NewIp, updatedDevice.NewNetworkName, updatedDevice.NewOperatingSystem);
         if (result == null)
         {
             return Results.NotFound();
@@ -88,9 +89,9 @@ public class DevicesController : ControllerBase
     }
 
     [HttpDelete("{id}")]
-    public IResult Delete(string id)
+    public async Task<IResult> Delete(string id)
     {
-       var result =  _deviceService.DeleteDevice(id);
+       var result =await  _deviceService.DeleteDeviceAsync(id);
        if (result == false)
        {
            return Results.NotFound();
@@ -98,20 +99,7 @@ public class DevicesController : ControllerBase
        return Results.Ok(result);
     }
 
-    public class EditDeviceRequest
-    {
-        [JsonPropertyName("newName")]
-        public string? NewName { get; set; }
-
-        [JsonPropertyName("newIp")]
-        public string? NewIp { get; set; }
-
-        [JsonPropertyName("newNetworkName")]
-        public string? NewNetworkName { get; set; }
-
-        [JsonPropertyName("newOperatingSystem")]
-        public string? NewOperatingSystem { get; set; }
-    }
+  
 
    private ElectronicDevice? DeviceFromJson(string rawJson)
 {

@@ -19,6 +19,7 @@ public abstract class ElectronicDevice
     /// Gets or sets a value indicating whether the device is currently powered on.
     /// </summary>
     public bool IsOn{get;set;}
+    public byte[] RowVersion { get; set; }
 
     /// <summary>
     /// Initializes a new instance of the ElectronicDevice class.
